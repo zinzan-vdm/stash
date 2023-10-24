@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function luks-wipe() {
+  local device="$1"
+  local no_confirm="$2"
+
+  if [[ -z "$device" || -d "$device" ]]; then
+    echo 'Usage: luks-wipe <device> [--no-confirm=yes]'
+    return 1
+  fi
+
+  if [[ "$no_confirm" != '--no-confirm=yes' ]]; then
+    read -t 120 -p "Cryptographically wiping $device requires results in complete unrecoverable loss of data. To continue, write 'yes' and proceed. " should_continue
+
+    if [[ "$should_continue" != 'yes' ]]; then
+      return 1
+    fi
+  fi
+
+  echo "cryptsetup open --type plain -d /dev/urandom \"$device\" '._luks_wipe_vol'"
+  cryptsetup open --type plain -d /dev/urandom "$device" '._luks_wipe_vol'
+
+  echo 'dd if=/dev/zero of=/dev/mapper/._luks_wipe_vol status=progress bs=1M'
+  dd if=/dev/zero of=/dev/mapper/._luks_wipe_vol status=progress bs=1M
+
+  echo 'cryptsetup close '._luks_wipe_vol''
+  cryptsetup close '._luks_wipe_vol'
+}
+
+if [[ -z "$@" ]]; then
+  luks-wipe "$@"
+fi

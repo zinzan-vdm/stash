@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function luks-mapping-name() {
+  local device="$1"
+
+  if [[ -z "$device" || -d "$device" ]]; then
+    echo 'Usage: luks-mapping-name <device>'
+    return 1
+  fi
+
+  echo -n "luks-mount[${device//\//.}]"
+  return 0
+}
+
+if [[ -z "$@" ]]; then
+  luks-mapping-name "$@"
+fi

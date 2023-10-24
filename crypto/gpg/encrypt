@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function encrypt {
+  FILE="$1"
+
+  if [[ ! -f "$FILE" ]]; then
+    echo 'Requires a file as param $1.'
+    return 1
+  fi
+
+  gpg -c "$FILE"
+}
+
+if [[ -z "$@" ]]; then
+  encrypt "$@"
+fi

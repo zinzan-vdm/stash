@@ -1,0 +1,24 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(realpath "$(dirname "$0")")"
+
+function luks-umount() {
+  local device="$1"
+
+  if [[ -z "$device" || -d "$device" ]]; then
+    echo 'Usage: luks-umount <device>'
+    return 1
+  fi
+
+  echo "umount \"/dev/mapper/$mapping_name\""
+  umount "/dev/mapper/$mapping_name"
+
+  local mapping_name="$($SCRIPT_DIR/luks-mapping-name "$device")"
+
+  echo "cryptsetup close \"$mapping_name\""
+  cryptsetup close "$mapping_name"
+}
+
+if [[ -z "$@" ]]; then
+  luks-umount "$@"
+fi

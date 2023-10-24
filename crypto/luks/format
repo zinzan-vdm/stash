@@ -1,0 +1,32 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(realpath "$(dirname "$0")")"
+
+function luks-format() {
+  local device="$1"
+  local passphrase="$2"
+  local no_confirm="$3"
+
+  if [[ -z "$device" || -d "$device" || -z "$passphrase" ]]; then
+    echo 'Usage: luks-format <device> <passphrase> [--no-confirm=yes]'
+    return 1
+  fi
+
+  if [[ "$no_confirm" != '--no-confirm=yes' ]]; then
+    read -t 120 -p "Encrypting $device requires cryptographically wiping the entire volume which results in complete unrecoverable loss of data. To continue, write 'yes' and proceed. " should_continue
+
+    if [[ "$should_continue" != 'yes' ]]; then
+      return 1
+    fi
+  fi
+
+  echo "$SCRIPT_DIR/luks-wipe \"$device\" --no-confirm=yes"
+  $SCRIPT_DIR/luks-wipe "$device" --no-confirm=yes
+
+  echo "echo -n \"\${passphrase}\" | cryptsetup luksFormat \"$device\" -"
+  echo -n "$passphrase" | cryptsetup luksFormat "$device" -
+}
+
+if [[ -z "$@" ]]; then
+  luks-format "$@"
+fi
