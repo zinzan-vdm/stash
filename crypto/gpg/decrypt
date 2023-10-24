@@ -11,6 +11,6 @@ function decrypt {
   gpg -d "$FILE"
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   decrypt "$@"
 fi

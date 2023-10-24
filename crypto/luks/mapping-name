@@ -12,6 +12,6 @@ function luks-mapping-name() {
   return 0
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   luks-mapping-name "$@"
 fi

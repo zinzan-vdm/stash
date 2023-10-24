@@ -27,6 +27,6 @@ function luks-format() {
   echo -n "$passphrase" | cryptsetup luksFormat "$device" -
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   luks-format "$@"
 fi

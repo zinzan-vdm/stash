@@ -11,6 +11,6 @@ function encrypt {
   gpg -c "$FILE"
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   encrypt "$@"
 fi

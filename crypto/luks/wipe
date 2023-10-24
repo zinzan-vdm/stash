@@ -27,6 +27,6 @@ function luks-wipe() {
   cryptsetup close '._luks_wipe_vol'
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   luks-wipe "$@"
 fi

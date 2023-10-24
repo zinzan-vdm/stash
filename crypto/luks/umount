@@ -19,6 +19,6 @@ function luks-umount() {
   cryptsetup close "$mapping_name"
 }
 
-if [[ -z "$@" ]]; then
+if [[ ! -z "$@" ]]; then
   luks-umount "$@"
 fi
