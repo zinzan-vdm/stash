@@ -8,7 +8,7 @@ function luks-mapping-name() {
     return 1
   fi
 
-  echo -n "luks-mount[${device//\//.}]"
+  echo -n "luks-mount.${device//\//_}"
   return 0
 }
 

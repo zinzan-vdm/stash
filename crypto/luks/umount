@@ -10,10 +10,10 @@ function luks-umount() {
     return 1
   fi
 
+  local mapping_name="$($SCRIPT_DIR/mapping-name "$device")"
+
   echo "umount \"/dev/mapper/$mapping_name\""
   umount "/dev/mapper/$mapping_name"
-
-  local mapping_name="$($SCRIPT_DIR/luks-mapping-name "$device")"
 
   echo "cryptsetup close \"$mapping_name\""
   cryptsetup close "$mapping_name"

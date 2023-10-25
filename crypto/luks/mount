@@ -2,23 +2,29 @@
 
 SCRIPT_DIR="$(realpath "$(dirname "$0")")"
 
-function luks-umount() {
+function luks-mount() {
   local device="$1"
+  local destination="$2"
+  local passphrase="$3"
 
-  if [[ -z "$device" || -d "$device" ]]; then
-    echo 'Usage: luks-umount <device>'
+  if [[ -z "$device" || -d "$device" || -z "$destination" || -z "$passphrase" ]]; then
+    echo 'Usage: luks-mount <device> <destination> <passphrase>'
     return 1
   fi
 
-  echo "umount \"/dev/mapper/$mapping_name\""
-  umount "/dev/mapper/$mapping_name"
+  echo "mkdir -p \"$destination\""
+  mkdir -p "$destination"
 
-  local mapping_name="$($SCRIPT_DIR/luks-mapping-name "$device")"
+  local mapping_name="$($SCRIPT_DIR/mapping-name "$device")"
 
-  echo "cryptsetup close \"$mapping_name\""
-  cryptsetup close "$mapping_name"
+  echo "echo -n \"\${passphrase}\" | cryptsetup open -d - \"$device\" \"$mapping_name\""
+  echo -n "${passphrase}" \
+    | cryptsetup open -d - "$device" "$mapping_name"
+
+  echo "mount \"/dev/mapper/$mapping_name\" \"$destination\""
+  mount "/dev/mapper/$mapping_name" "$destination"
 }
 
 if [[ ! -z "$@" ]]; then
-  luks-umount "$@"
+  luks-mount "$@"
 fi

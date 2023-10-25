@@ -20,8 +20,8 @@ function luks-format() {
     fi
   fi
 
-  echo "$SCRIPT_DIR/luks-wipe \"$device\" --no-confirm=yes"
-  $SCRIPT_DIR/luks-wipe "$device" --no-confirm=yes
+  echo "$SCRIPT_DIR/wipe \"$device\" --no-confirm=yes"
+  $SCRIPT_DIR/wipe "$device" --no-confirm=yes
 
   echo "echo -n \"\${passphrase}\" | cryptsetup luksFormat \"$device\" -"
   echo -n "$passphrase" | cryptsetup luksFormat "$device" -
