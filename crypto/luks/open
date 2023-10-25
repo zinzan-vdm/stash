@@ -1,0 +1,24 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(realpath "$(dirname "$0")")"
+
+function luks-open() {
+  local device="$1"
+  local passphrase="$2"
+
+  if [[ -z "$device" || -d "$device" || -z "$passphrase" ]]; then
+    echo 'Usage: luks-open <device> <passphrase>'
+    return 1
+  fi
+
+  local mapping_name="$($SCRIPT_DIR/mapping-name "$device")"
+
+  echo -n "${passphrase}" \
+    | cryptsetup open -d - "$device" "$mapping_name"
+
+  echo -n "$mapping_name"
+}
+
+if [[ ! -z "$@" ]]; then
+  luks-open "$@"
+fi

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(realpath "$(dirname "$0")")"
+
+function luks-close() {
+  local mapping_name="$1"
+
+  if [[ -z "$mapping_name" || -d "$mapping_name" ]]; then
+    echo 'Usage: luks-close <mapping_name>'
+    return 1
+  fi
+
+  echo "cryptsetup close \"$mapping_name\""
+  cryptsetup close "$mapping_name"
+}
+
+if [[ ! -z "$@" ]]; then
+  luks-close "$@"
+fi
