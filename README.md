@@ -1,4 +1,4 @@
 - check branches for specific items
-- its easier to change repo visibility to public, otherwise you need to use tokens with `-u '{token}'`, just remember to change visibility back to private
+- sometimes its easier to change repo visibility, otherwise you need to use authentication, just remember to change visibility back to private
 - to download as tar or zip use `curl -L -o {name} 'https://github.com/zinzan-vdm/stash/{tarball|zipball}/{branch}'`
   - note: git doesnt mind slashes in branch names
